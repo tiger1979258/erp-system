@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: erp-backend
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: DB_HOST
+        value: <your-mysql-host>
+      - key: DB_PORT
+        value: 3306
+      - key: DB_USER
+        value: <your-mysql-user>
+      - key: DB_PASSWORD
+        value: <your-mysql-password>
+      - key: DB_NAME
+        value: erp_system
+      - key: PORT
+        value: 10000
+
+  - type: web
+    name: erp-frontend
+    runtime: static
+    plan: free
+    buildCommand: npm install && npm run build
+    staticPublishPath: build
+    routes:
+      - type: rewrite
+        source: /api/*
+        destination: https://erp-backend.onrender.com/api/:splat
